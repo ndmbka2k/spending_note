@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       home: MyHomePage(),
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
     );
   }
 }
@@ -49,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void startAddNewTransaction(BuildContext context) {
+  void _startAddNewTransaction(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (_) {
@@ -69,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              startAddNewTransaction(context);
+              _startAddNewTransaction(context);
             },
             icon: Icon(Icons.add),
           ),
@@ -92,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          startAddNewTransaction(context);
+          _startAddNewTransaction(context);
         },
         child: Icon(Icons.add),
       ),
