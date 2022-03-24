@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spending_app/widgets/chart.dart';
 import 'package:spending_app/widgets/new_transaction.dart';
 import 'package:spending_app/widgets/transaction_list.dart';
 
@@ -14,6 +15,13 @@ class MyApp extends StatelessWidget {
       home: MyHomePage(),
       theme: ThemeData(
         primarySwatch: Colors.green,
+        fontFamily: 'Quicksand',
+        appBarTheme: AppBarTheme(
+            titleTextStyle: TextStyle(
+          fontFamily: 'OpenSans',
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        )),
       ),
     );
   }
@@ -26,19 +34,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransaction = [
-    Transaction(
-      id: 't1',
-      tiltle: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      tiltle: 'Groceries',
-      amount: 12.34,
-      date: DateTime.now(),
-    )
+    // Transaction(
+    //   id: 't1',
+    //   tiltle: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   tiltle: 'Groceries',
+    //   amount: 12.34,
+    //   date: DateTime.now(),
+    // )
   ];
+
+  List<Transaction> get _recentTransaction {
+    return _userTransaction.where((element) {
+      return element.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTx = Transaction(
@@ -68,7 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter App'),
+        title: Text(
+          'Flutter App',
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -81,14 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransaction),
             TransactionList(_userTransaction),
           ],
         ),
