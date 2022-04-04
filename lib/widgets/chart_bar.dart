@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:spending_app/widgets/chart.dart';
 
 class ChartBar extends StatelessWidget {
   final String label;
   final double spendingAmount;
   final double spendingPctOfTotal;
 
-  ChartBar(
-      {required this.label,
-      required this.spendingAmount,
-      required this.spendingPctOfTotal});
+  final Function(double) getSpendingAmount1;
+
+  // String getSpendingAmount(double spendingAmount) {
+  //   if (spendingAmount / 1000000000 >= 1) {
+  //     String temp = (spendingAmount / 1000000000).toStringAsFixed(2);
+  //     return '\$${temp}B';
+  //   } else if (spendingAmount / 1000000 >= 1) {
+  //     String temp = (spendingAmount / 1000000).toStringAsFixed(2);
+  //     return '\$${temp}M';
+  //   } else if (spendingAmount / 1000 >= 1) {
+  //     String temp = (spendingAmount / 1000).toStringAsFixed(2);
+  //     return '\$${temp}K';
+  //   } else
+  //     return '\$${spendingAmount.toStringAsFixed(0)}';
+  // }
+
+  ChartBar({
+    required this.label,
+    required this.spendingAmount,
+    required this.spendingPctOfTotal,
+    required this.getSpendingAmount1,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text('\$${spendingAmount.toStringAsFixed(0)}'),
+        FittedBox(
+          child: Text(
+            getSpendingAmount1(spendingAmount),
+          ),
+        ),
         SizedBox(
           height: 4,
         ),
@@ -39,6 +60,10 @@ class ChartBar extends StatelessWidget {
             )
           ]),
         ),
+        SizedBox(
+          height: 4,
+        ),
+        Text(label),
       ],
     );
   }

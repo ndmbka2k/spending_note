@@ -11,10 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter App',
       home: MyHomePage(),
       theme: ThemeData(
         primarySwatch: Colors.green,
+        errorColor: Colors.red,
         fontFamily: 'Quicksand',
         appBarTheme: AppBarTheme(
             titleTextStyle: TextStyle(
@@ -58,15 +60,36 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addNewTransaction(String txTitle, double txAmount) {
+  String getSpendingAmount(double spendingAmount) {
+    if (spendingAmount / 1000000000 >= 1) {
+      String temp = (spendingAmount / 1000000000).toStringAsFixed(2);
+      return '\$${temp}B';
+    } else if (spendingAmount / 1000000 >= 1) {
+      String temp = (spendingAmount / 1000000).toStringAsFixed(2);
+      return '\$${temp}M';
+    } else if (spendingAmount / 1000 >= 1) {
+      String temp = (spendingAmount / 1000).toStringAsFixed(2);
+      return '\$${temp}K';
+    } else
+      return '\$${spendingAmount.toStringAsFixed(0)}';
+  }
+
+  void _addNewTransaction(String txTitle, double txAmount, DateTime time) {
     final newTx = Transaction(
-        amount: txAmount,
-        tiltle: txTitle,
-        date: DateTime.now(),
-        id: DateTime.now().toString());
+      amount: txAmount,
+      tiltle: txTitle,
+      date: time,
+      id: DateTime.now().toString(),
+    );
 
     setState(() {
       _userTransaction.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _userTransaction.removeWhere((element) => element.id == id);
     });
   }
 
@@ -101,8 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Chart(_recentTransaction),
-            TransactionList(_userTransaction),
+            Chart(_recentTransaction, getSpendingAmount),
+            TransactionList(
+                _userTransaction, _deleteTransaction, getSpendingAmount),
           ],
         ),
       ),

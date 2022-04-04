@@ -4,7 +4,10 @@ import 'package:spending_app/models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transaction;
-  TransactionList(this.transaction);
+  final Function(String) deleteTx;
+  final Function(double) getSpendingAmount;
+
+  TransactionList(this.transaction, this.deleteTx, this.getSpendingAmount);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,7 +47,8 @@ class TransactionList extends StatelessWidget {
                         ),
                         padding: EdgeInsets.all(10),
                         child: Text(
-                          '\$${transaction[index].amount.toStringAsFixed(2)}',
+                          // '\$${transaction[index].amount.toStringAsFixed(2)}',
+                          getSpendingAmount(transaction[index].amount),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -52,18 +56,26 @@ class TransactionList extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            transaction[index].tiltle,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Text(
-                            DateFormat.yMMMd().format(transaction[index].date),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              transaction[index].tiltle,
+                              style: Theme.of(context).textTheme.headline6,
+                            ),
+                            Text(
+                              DateFormat.yMMMd()
+                                  .format(transaction[index].date),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => deleteTx(transaction[index].id),
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).errorColor,
                       ),
                     ],
                   ),
